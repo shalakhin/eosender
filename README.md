@@ -22,10 +22,10 @@ npm install -g eosender
 By default, it will be searched at `$HOME` folder as `$HOME/.eosender.yml` but you can override it with `eosender --config <path-to-config>` 
 
 ```yaml
-- uri: some-eos-node-url 
-- sender:
-  - name: username
-  - privateKey: privateKey
+uri: some-eos-node-url 
+sender:
+  username: username
+  privateKey: privateKey
 ```
 
 ## usage
@@ -43,7 +43,7 @@ username1,contract,amount,tokenName,memo
 file example:
 
 ```csv
-user1,10.0000,eosio.token,EOS,nice memo here
-user2,10.0000,eosio.token,SYS,super-duper
-user3,100.00,eos.usdt,USDT,
+user1,eosio.token,10.0000,EOS,nice memo here
+user2,eosio.token,10.0000,SYS,super-duper
+user3,eos.usdt,10.0000,USDT,
 ```
