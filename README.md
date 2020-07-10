@@ -1,13 +1,20 @@
-# eosender
+eosender
+========
 
 multiple sending tokens with EOS blockchain. The goal for this CLI command is to execute multiple actions within one transaction
+
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Version](https://img.shields.io/npm/v/eosender.svg)](https://npmjs.org/package/eosender)
+[![Downloads/week](https://img.shields.io/npm/dw/eosender.svg)](https://npmjs.org/package/eosender)
+[![License](https://img.shields.io/npm/l/eosender.svg)](https://github.com/shalakhin/eosender/blob/master/package.json)
+
 
 ## install
 
 1. Install it with npm
 
 ```bash
-npm i -g eosender
+npm install -g eosender
 ```
 
 2. setup config
