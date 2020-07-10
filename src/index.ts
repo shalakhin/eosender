@@ -1,6 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import * as yaml from 'js-yaml'
+import * as csv from 'csv-parser'
 
 class Eosender extends Command {
   static description = 'send mutiple transfer actions within one transaction'
@@ -22,11 +23,25 @@ class Eosender extends Command {
   async run() {
     const {args, flags} = this.parse(Eosender)
 
-    const config = flags.config || `${process.env.HOME}/.eosender.yml`
+    const configPath = flags.config || `${process.env.HOME}/.eosender.yml`
     const file = args.file
-    const data: any = yaml.safeLoad(fs.readFileSync(config, 'utf8'))
+    const config: any = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'))
 
-
+    const filePath: string = `${process.cwd()}/${file}`
+    const actionsData: any = []
+    const headers = [
+      'username',
+      'contract',
+      'amount',
+      'tokenName',
+      'memo'
+    ]
+    fs.createReadStream(filePath)
+      .pipe(csv(headers))
+      .on('data', (data) => actionsData.push(data))
+      .on('end', () => {
+        this.log(actionsData)
+      })
   }
 }
 
