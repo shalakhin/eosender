@@ -11,9 +11,14 @@
     "@oclif/command": "^1.7.0",
     "@oclif/config": "^1.16.0",
     "@oclif/plugin-help": "^3.1.0",
+    "@types/chalk": "^2.2.0",
     "@types/js-yaml": "^3.12.5",
+    "@types/text-encoding": "0.0.35",
+    "chalk": "^4.1.0",
     "csv-parser": "^2.3.3",
+    "eosjs": "^20.0.3",
     "js-yaml": "^3.14.0",
+    "node-fetch": "^2.6.0",
     "tslib": "^1.13.0"
   },
   "devDependencies": {
