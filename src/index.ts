@@ -9,10 +9,12 @@ import * as chalk from 'chalk';
 const fetch = require('node-fetch');
 
 class Eosender extends Command {
-  static description = 'send mutiple transfer actions within one transaction'
+  static description = 'send multiple transfer actions within one transaction'
 
   static flags = {
     version: flags.version({char: 'v'}),
+    expire: flags.integer({char: 'e', description: 'expiration seconds for the transaction', default: 60}),
+    blocks: flags.integer({'char': 'b', description: 'blocks behind', default: 3}),
     help: flags.help({char: 'h'}),
     config: flags.string({char: 'c', description: 'override default path to the config'}),
     detailed: flags.boolean({char: 'd', description: 'display detailed information', default: false})
@@ -72,8 +74,8 @@ class Eosender extends Command {
           const result = await api.transact({
             actions: actions
           }, {
-            blocksBehind: 3,
-            expireSeconds: 30,
+            blocksBehind: flags.blocks,
+            expireSeconds: flags.expire,
           })
           this.log(`Transaction ID:\n\n${chalk.green(result.transaction_id)}\n`)
           if (flags.detailed) {
@@ -81,7 +83,11 @@ class Eosender extends Command {
             this.log(chalk.green(JSON.stringify(result, null, 2)))
           }
         }
-        pushTransaction()
+        try {
+          pushTransaction()
+        } catch (e) {
+          this.log(chalk.red(e))
+        }
       })
   }
 }
