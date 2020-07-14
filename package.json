@@ -1,7 +1,7 @@
 {
   "name": "eosender",
   "description": "send multiple actions within one eos transaction in a simple way",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Olexandr Shalakhin",
   "bin": {
     "eosender": "./bin/run"
