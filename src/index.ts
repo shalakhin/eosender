@@ -14,9 +14,9 @@ class Eosender extends Command {
   static flags = {
     version: flags.version({char: 'v'}),
     expire: flags.integer({char: 'e', description: 'expiration seconds for the transaction', default: 60}),
-    blocks: flags.integer({'char': 'b', description: 'blocks behind', default: 3}),
+    blocks: flags.integer({char: 'b', description: 'blocks behind', default: 3}),
     help: flags.help({char: 'h'}),
-    config: flags.string({char: 'c', description: 'override default path to the config'}),
+    config: flags.string({char: 'c', description: 'override default path to the config', default:`${process.env.HOME}/.eosender.yml`}),
     detailed: flags.boolean({char: 'd', description: 'display detailed information', default: false})
   }
 
@@ -31,11 +31,9 @@ class Eosender extends Command {
   async run() {
     const {args, flags} = this.parse(Eosender)
 
-    const configPath = flags.config || `${process.env.HOME}/.eosender.yml`
     const file = args.file
-    const config: any = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'))
-
-    const filePath: string = `${process.cwd()}/${file}`
+    const config: any = yaml.safeLoad(fs.readFileSync(flags.config, 'utf8'))
+    const filePath: string = file
     const actions: any = []
     const headers = [
       'username',
