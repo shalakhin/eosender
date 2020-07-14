@@ -11,10 +11,6 @@ const pushTransaction = async (config: any, flags: any, chunk: any) => {
   const rpc = new JsonRpc(rpcUrl, { fetch });
   const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
 
-  if (chunk.no != 0) {
-    throw "ooook!"
-  }
-
   const data = await api.transact({
     actions: chunk.actions
   }, {
