@@ -2,18 +2,17 @@ import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import * as yaml from 'js-yaml'
 import * as csv from 'csv-parser'
-import { Api, JsonRpc, RpcError} from "eosjs/dist";
-import { JsSignatureProvider} from "eosjs/dist/eosjs-jssig";
-import { TextDecoder, TextEncoder } from "text-encoding";
 import * as chalk from 'chalk';
-const fetch = require('node-fetch');
+import processActions from "./manager";
+import packAction from "./action";
 
 class Eosender extends Command {
   static description = 'send multiple transfer actions within one transaction'
 
   static flags = {
     version: flags.version({char: 'v'}),
-    expire: flags.integer({char: 'e', description: 'expiration seconds for the transaction', default: 60}),
+    expire: flags.integer({char: 'x', description: 'expiration seconds for the transaction', default: 60}),
+    chunks: flags.integer({description: 'how large must chunks be', default: 100}),
     blocks: flags.integer({char: 'b', description: 'blocks behind', default: 3}),
     help: flags.help({char: 'h'}),
     config: flags.string({char: 'c', description: 'override default path to the config', default:`${process.env.HOME}/.eosender.yml`}),
@@ -34,7 +33,7 @@ class Eosender extends Command {
     const file = args.file
     const config: any = yaml.safeLoad(fs.readFileSync(flags.config, 'utf8'))
     const filePath: string = file
-    const actions: any = []
+    const actionsList: any = []
     const headers = [
       'username',
       'contract',
@@ -45,47 +44,10 @@ class Eosender extends Command {
     fs.createReadStream(filePath)
       .pipe(csv(headers))
       .on('data', (data) => {
-        actions.push({
-          account: data.contract,
-          name: 'transfer',
-            authorization: [{
-            actor: config.sender.username,
-            permission: 'active',
-          }],
-            data: {
-              from: config.sender.username,
-              to: data.username,
-              quantity: `${data.amount} ${data.tokenName}`,
-              memo: data.memo,
-          },
-        })
+        actionsList.push(packAction(config, data))
       })
       .on('end', () => {
-
-        let defaultPrivateKey:string = config.sender.privateKey;
-        const signatureProvider = new JsSignatureProvider([defaultPrivateKey]);
-        let rpcUrl:string = config.uri;
-        const rpc = new JsonRpc(rpcUrl, { fetch });
-        const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
-
-        const pushTransaction = async () => {
-          const result = await api.transact({
-            actions: actions
-          }, {
-            blocksBehind: flags.blocks,
-            expireSeconds: flags.expire,
-          })
-          this.log(`Transaction ID:\n\n${chalk.green(result.transaction_id)}\n`)
-          if (flags.detailed) {
-            this.log('Data:\n')
-            this.log(chalk.green(JSON.stringify(result, null, 2)))
-          }
-        }
-        try {
-          pushTransaction()
-        } catch (e) {
-          this.log(chalk.red(e))
-        }
+        processActions(config, file, flags, actionsList)
       })
   }
 }
