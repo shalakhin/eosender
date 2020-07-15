@@ -26,7 +26,7 @@ const processActions = async (config: any, file: string, flags: any, actions: an
   const toDone = (result: any) => {
     let stream = fs.createWriteStream(`${file}_done`, {flags: 'a'})
     result.chunk.actions.forEach((action: any) => {
-      stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo}\n`)
+      stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo},${result.data.transaction_id}\n`)
     })
     stream.end()
   }
