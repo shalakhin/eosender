@@ -1,11 +1,14 @@
 const packAction = (config: any, data: any) => {
-  let amount: number = data.amount
+  let amount: string = data.amount
   if (config.pcash && config.pcash === true) {
+    let amountWithFee: number
     if (data.amount == 0.00001) {
-      amount = (Math.ceil(data.amount / 0.9975 * 10**5))/10**5
+      amountWithFee = (Math.ceil(data.amount / 0.9975 * 10**5))/10**5
     } else {
-      amount = (Math.floor(data.amount / 0.9975 * 10**5))/10**5
+      amountWithFee = (Math.floor(data.amount / 0.9975 * 10**5))/10**5
     }
+
+    amount = amountWithFee.toFixed(5)
   }
   return {
     account: data.contract,
