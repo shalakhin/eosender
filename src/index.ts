@@ -14,6 +14,7 @@ class Eosender extends Command {
     expire: flags.integer({char: 'x', description: 'expiration seconds for the transaction', default: 60}),
     chunks: flags.integer({description: 'how large must chunks be', default: 100}),
     blocks: flags.integer({char: 'b', description: 'blocks behind', default: 3}),
+    pcash: flags.boolean({char: 'p', description: 'consider pcash tokens fee', default: false}),
     help: flags.help({char: 'h'}),
     config: flags.string({char: 'c', description: 'override default path to the config', default:`${process.env.HOME}/.eosender.yml`}),
     detailed: flags.boolean({char: 'd', description: 'display detailed information', default: false})

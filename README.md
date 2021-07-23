@@ -26,7 +26,13 @@ uri: some-eos-node-url
 sender:
   username: username
   privateKey: privateKey
+pcash: false
 ```
+
+`pcash: false` means do not treat the token as token.pcash with its fees logic. Otherwise if set `pcash: true` fee will be calculated.
+
+- with `pcash: false` if 333 set for transfer 333
+- with `pcash: true` if 333 set for transfer 333.83458
 
 ## usage
 
