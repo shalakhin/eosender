@@ -6,6 +6,9 @@ const packAction = (config: any, data: any) => {
       amountWithFee = (Math.ceil(data.amount / 0.9975 * 10**5))/10**5
     } else {
       amountWithFee = (Math.floor(data.amount / 0.9975 * 10**5))/10**5
+      if (amountWithFee - data.amount > 250) {
+        amountWithFee = data.amount + 250
+      }
     }
 
     amount = amountWithFee.toFixed(5)
