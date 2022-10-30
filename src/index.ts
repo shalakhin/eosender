@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import * as yaml from 'js-yaml'
 import * as csv from 'csv-parser'
-import * as chalk from 'chalk'
+// import * as chalk from 'chalk'
 import processActions from './manager'
 import packAction from './action'
 
