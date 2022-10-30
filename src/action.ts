@@ -1,33 +1,37 @@
-const packAction = (config: any, data: any) => {
-  let amount: string = data.amount
-  if (config.pcash && config.pcash === true) {
-    let amountWithFee: number
-    if (data.amount == 0.00001) {
-      amountWithFee = (Math.ceil(data.amount / 0.9975 * 10**5))/10**5
-    } else {
-      amountWithFee = (Math.floor(data.amount / 0.9975 * 10**5))/10**5
-      if (amountWithFee - data.amount > 250) {
-        amountWithFee = data.amount + 250
-      }
-    }
-
-    amount = amountWithFee.toFixed(5)
-  }
-  return {
-    account: data.contract,
-    name: 'transfer',
-    authorization: [{
-      actor: config.sender.username,
-      permission: 'active',
-    }],
-    data: {
+const packAction = (config: any, data: any, actionType: string) => {
+  let actionData: any
+  if (actionType === 'transfer') {
+    const amount: string = data.amount
+    actionData = {
       from: config.sender.username,
       to: data.username,
       quantity: `${amount} ${data.tokenName}`,
       memo: data.memo,
-    },
+    }
+  } else if (actionType === 'setinhdate') {
+    actionData = {
+      owner: data.owner,
+      date: data.date,
+    }
+  } else if (actionType === 'dstrinh') {
+    actionData = {
+      initiator: data.initiator,
+      inheritance_owner: data.inheritance_owner,
+      token: data.token,
+    }
+  } else {
+    throw new Error('unknown action type')
+  }
+
+  return {
+    account: data.contract,
+    name: data.action,
+    authorization: [{
+      actor: config.sender.username,
+      permission: 'active',
+    }],
+    ...actionData,
   }
 }
 
-export default packAction;
-
+export default packAction
