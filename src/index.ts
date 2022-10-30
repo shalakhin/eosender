@@ -69,7 +69,9 @@ class Eosender extends Command {
     fs.createReadStream(filePath)
     .pipe(csv({headers: headers, separator: ','}))
     .on('data', data => {
-      if (data.username !== undefined) {
+      if (data.username !== undefined && flags.actionType === 'transfer') {
+        actionsList.push(packAction(config, data, flags.actionType))
+      } else {
         actionsList.push(packAction(config, data, flags.actionType))
       }
     })
