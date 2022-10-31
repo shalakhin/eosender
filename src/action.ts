@@ -30,7 +30,7 @@ const packAction = (config: any, data: any, actionType: string) => {
       actor: config.sender.username,
       permission: 'active',
     }],
-    ...actionData,
+    data: actionData,
   }
 }
 
