@@ -25,7 +25,13 @@ const processActions = async (config: any, file: string, flags: any, actions: an
   const toDone = (result: any) => {
     const stream = fs.createWriteStream(`${file}_done`, {flags: 'a'})
     result.chunk.actions.forEach((action: any) => {
-      stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo},${result.data.transaction_id}\n`)
+      if (flags.actionType === 'transfer') {
+        stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo}\n`)
+      } else if (flags.actionType === 'setinhdate') {
+        stream.write(`${action.account},${action.name},${action.data.owner},${action.data.date}\n`)
+      } else if (flags.actionType === 'dstrinh') {
+        stream.write(`${action.account},${action.name},${action.data.initiator},${action.data.inheritance_owner},${action.data.token}\n`)
+      }
     })
     stream.end()
   }
