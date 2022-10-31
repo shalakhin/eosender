@@ -44,7 +44,6 @@ const processActions = async (config: any, file: string, flags: any, actions: an
           if (flags.actionType === 'transfer') {
             stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo}\n`)
           } else if (flags.actionType === 'setinhdate') {
-            console.log(`${JSON.stringify(action)}`)
             stream.write(`${action.account},${action.name},${action.data.owner},${action.data.date}\n`)
           } else if (flags.actionType === 'dstrinh') {
             stream.write(`${action.account},${action.name},${action.data.initiator},${action.data.inheritance_owner},${action.data.token}\n`)
