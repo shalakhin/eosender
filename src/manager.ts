@@ -3,6 +3,7 @@ import * as chalk from 'chalk'
 import pushTransaction from './transaction'
 
 const processActions = async (config: any, file: string, flags: any, actions: any) => {
+  console.log(actions)
   const chunksNumber: number = Math.ceil(actions.length / flags.chunks)
 
   console.log(`${chalk.cyan('Processing')} ${chunksNumber} chunks for ${actions.length} transfers`)

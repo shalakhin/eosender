@@ -25,7 +25,7 @@ const packAction = (config: any, data: any, actionType: string) => {
 
   return {
     account: data.contract,
-    name: data.action,
+    name: actionType,
     authorization: [{
       actor: config.sender.username,
       permission: 'active',
