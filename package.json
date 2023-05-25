@@ -16,7 +16,6 @@
     "@types/text-encoding": "0.0.35",
     "chalk": "^4.1.0",
     "csv-parser": "^2.3.3",
-    "eosender": "^0.8.0",
     "eosjs": "^20.0.3",
     "js-yaml": "^3.14.0",
     "node-fetch": "^2.6.0",

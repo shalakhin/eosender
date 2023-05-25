@@ -11,7 +11,7 @@ const packAction = (config: any, data: any, actionType: string) => {
   } else if (actionType === 'setinhdate') {
     actionData = {
       owner: data.owner,
-      date: parseInt(data.date, 0),
+      inactive_period: parseInt(data.date, 0),
     }
   } else if (actionType === 'dstrinh') {
     actionData = {
