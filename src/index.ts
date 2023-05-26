@@ -40,7 +40,7 @@ class Eosender extends Command {
       'contract',
       'amount',
       'tokenName',
-      'memo'
+      'memo',
     ]
     fs.createReadStream(filePath)
       .pipe(csv(headers))

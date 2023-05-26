@@ -29,5 +29,4 @@ const packAction = (config: any, data: any) => {
   }
 }
 
-export default packAction;
-
+export default packAction
