@@ -2,9 +2,8 @@ import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import * as yaml from 'js-yaml'
 import * as csv from 'csv-parser'
-import * as chalk from 'chalk';
-import processActions from "./manager";
-import packAction from "./action";
+import processActions from './manager'
+import packAction from './action'
 
 class Eosender extends Command {
   static description = 'send multiple transfer actions within one transaction'
@@ -16,8 +15,8 @@ class Eosender extends Command {
     blocks: flags.integer({char: 'b', description: 'blocks behind', default: 3}),
     pcash: flags.boolean({char: 'p', description: 'consider pcash tokens fee', default: false}),
     help: flags.help({char: 'h'}),
-    config: flags.string({char: 'c', description: 'override default path to the config', default:`${process.env.HOME}/.eosender.yml`}),
-    detailed: flags.boolean({char: 'd', description: 'display detailed information', default: false})
+    config: flags.string({char: 'c', description: 'override default path to the config', default: `${process.env.HOME}/.eosender.yml`}),
+    detailed: flags.boolean({char: 'd', description: 'display detailed information', default: false}),
   }
 
   static args = [
@@ -25,7 +24,7 @@ class Eosender extends Command {
       name: 'file',
       required: true,
       description: 'actions file',
-    }
+    },
   ]
 
   async run() {
@@ -42,16 +41,13 @@ class Eosender extends Command {
       'tokenName',
       'memo',
     ]
-    fs.createReadStream(filePath)
-      .pipe(csv(headers))
-      .on('data', (data) => {
-        if (data.username !== undefined) {
-          actionsList.push(packAction(config, data))
-        }
-      })
-      .on('end', () => {
-        processActions(config, file, flags, actionsList)
-      })
+    fs.createReadStream(filePath).pipe(csv(headers)).on('data', data => {
+      if (data.username !== undefined) {
+        actionsList.push(packAction(config, data))
+      }
+    }).on('end', () => {
+      processActions(config, file, flags, actionsList)
+    })
   }
 }
 
