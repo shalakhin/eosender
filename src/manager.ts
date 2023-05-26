@@ -3,9 +3,11 @@ import * as chalk from 'chalk'
 import pushTransaction from './transaction'
 
 const processActions = async (config: any, file: string, flags: any, actions: any) => {
+  // eslint-disable-next-line no-console
   console.log(actions)
   const chunksNumber: number = Math.ceil(actions.length / flags.chunks)
 
+  // eslint-disable-next-line no-console
   console.log(`${chalk.cyan('Processing')} ${chunksNumber} chunks for ${actions.length} transfers`)
 
   const chunks: Array<any> = []
@@ -36,25 +38,34 @@ const processActions = async (config: any, file: string, flags: any, actions: an
     })
     stream.end()
   }
-  chunks.reduce(
-    (p, chunk) => p.then(() => {
-      pushTransaction(config, flags, chunk).then(log).then(toDone).catch(e => {
-        console.log(chalk.red(e))
-        const stream = fs.createWriteStream(`${file}_failed`, {flags: 'a'})
-        chunk.actions.forEach((action: any) => {
-          if (flags.actionType === 'transfer') {
-            stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo}\n`)
-          } else if (flags.actionType === 'setinhdate') {
-            stream.write(`${action.account},${action.name},${action.data.owner},${action.data.inactive_period}\n`)
-          } else if (flags.actionType === 'dstrinh') {
-            stream.write(`${action.account},${action.name},${action.data.initiator},${action.data.inheritance_owner},${action.data.token}\n`)
-          }
-        })
-        stream.end()
+
+  const wait = (ms: number) => new Promise(res => setTimeout(() => res(''), ms))
+
+  for (const chunk of chunks) {
+    try {
+      const result = await pushTransaction(config, flags, chunk)
+      const first: string = result.chunk.actions[0].data.to
+      const last: string = result.chunk.actions[result.chunk.actions.length - 1].data.to
+      // eslint-disable-next-line no-console
+      console.log(`chunk ${result.chunk.no}\t${first}....${last} \t\t→ ${chalk.green(result.data.transaction_id)}`)
+      toDone(result)
+      // eslint-disable-next-line unicorn/catch-error-name
+    } catch (e) {
+      console.log(chalk.red(e))
+      const stream = fs.createWriteStream(`${file}_failed`, {flags: 'a'})
+      chunk.actions.forEach((action: any) => {
+        if (flags.actionType === 'transfer') {
+          stream.write(`${action.data.to},${action.account},${action.data.quantity.split(' ')[0]},${action.data.quantity.split(' ')[1]},${action.data.memo}\n`)
+        } else if (flags.actionType === 'setinhdate') {
+          stream.write(`${action.account},${action.name},${action.data.owner},${action.data.inactive_period}\n`)
+        } else if (flags.actionType === 'dstrinh') {
+          stream.write(`${action.account},${action.name},${action.data.initiator},${action.data.inheritance_owner},${action.data.token}\n`)
+        }
       })
-    }),
-    starterPromise
-  )
+      stream.end()
+    }
+    await wait(1000)
+  }
 }
 
 export default processActions
